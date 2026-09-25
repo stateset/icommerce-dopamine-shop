@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -83,5 +83,66 @@ test('CLI rejects unknown shops and existing databases', () => {
     assert.match(unknown.stderr, /Unknown shop/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI --email shops as someone else', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'dopamine-cli-email-'));
+  try {
+    const db = join(dir, 'food.db');
+    const result = spawnSync(
+      process.execPath,
+      [join(root, 'bin', 'launch.mjs'), 'food', '--db', db, '--email', 'critic@example.com'],
+      { encoding: 'utf8', timeout: 60_000 },
+    );
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /CraveNeverPays/);
+    const commerce = new Commerce(db);
+    const customer = await commerce.customers.getByEmail('critic@example.com');
+    assert.ok(customer, 'override email must own the order');
+    assert.equal(await commerce.orders.count(), 1);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI launches a copied template shop (GUIDE flow)', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'dopamine-cli-custom-'));
+  const shopDir = join(root, 'shops', 'tmp-custom-shop');
+  try {
+    cpSync(join(root, 'shops', '_template'), shopDir, { recursive: true });
+    const result = spawnSync(
+      process.execPath,
+      [join(root, 'bin', 'launch.mjs'), 'tmp-custom-shop', '--db', join(dir, 'custom.db')],
+      { encoding: 'utf8', timeout: 60_000 },
+    );
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /My Dopamine Shop/);
+    assert.match(result.stdout, /0 spent/);
+  } finally {
+    rmSync(shopDir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI refuses to relaunch into an existing database', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'dopamine-cli-rerun-'));
+  try {
+    const db = join(dir, 'food.db');
+    const first = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), 'food', '--db', db], { encoding: 'utf8', timeout: 60_000 });
+    assert.equal(first.status, 0, first.stderr);
+    const second = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), 'food', '--db', db], { encoding: 'utf8', timeout: 60_000 });
+    assert.equal(second.status, 1);
+    assert.match(second.stderr, /already exists/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('--list names every launchable shop', () => {
+  const result = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), '--list'], { encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr);
+  for (const name of ['food', 'travel', 'mall']) {
+    assert.match(result.stdout, new RegExp(`^${name}$`, 'm'));
   }
 });
