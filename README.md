@@ -52,4 +52,5 @@ is charged and no provider is called. Say so to your users.
 npm ci
 npm test
 node bin/launch.mjs mall --db /tmp/mall.db
+node bin/launch.mjs checkin mall --db /tmp/mall.db
 ```

@@ -11,6 +11,6 @@
   "basket": [{ "sku": "KYOTO-WKND", "qty": 1 }],
   "deal": { "code": "WINDOW-SEAT", "name": "20% off imaginary legroom", "percentOff": 0.2, "coupon": "WINDOWSEAT" },
   "mysteryBox": { "pool": ["Weekend in Kyoto", "Beach Day (cloudy)", "Couch Staycation", "Airport nap (premium)"] },
-  "loyalty": { "program": "Wander Miles", "pointsPerDollar": 5 },
+  "loyalty": { "program": "Wander Miles", "pointsPerDollar": 5, "checkin": { "points": 10, "streakBonus": 2 } },
   "theater": { "lines": ["🎫 Booking {id} confirmed — pack nothing", "✈️ Flight {id} is boarding (it never departs)", "✨ Trip {id} complete. You never left the couch."] }
 }

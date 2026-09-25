@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Commerce } from '@stateset/embedded';
-import { loadShop, runLoop } from '../lib/shop.mjs';
+import { checkin, loadShop, runLoop } from '../lib/shop.mjs';
 import { reveal, trackingTheater } from '../lib/theater.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -175,6 +175,87 @@ test('fulfill ships the order for real (locally)', async () => {
 test('fulfill without a tracking string fails fast', async () => {
   const bad = { ...readShop('fit'), fulfill: {} };
   await assert.rejects(runLoop(new Commerce(':memory:'), bad), /"tracking"/);
+});
+
+test('daily check-ins build a streak with growing awards', async () => {
+  const shop = readShop('food');
+  const { points, streakBonus } = shop.loyalty.checkin;
+  const commerce = new Commerce(':memory:');
+  await runLoop(commerce, shop, { revealSeed: 7 });
+  const d1 = await checkin(commerce, shop, { date: '2026-01-05' });
+  assert.deepEqual(
+    { streak: d1.streak, awarded: d1.awarded, alreadyCheckedIn: d1.alreadyCheckedIn },
+    { streak: 1, awarded: points, alreadyCheckedIn: false },
+  );
+  const d2 = await checkin(commerce, shop, { date: '2026-01-06' });
+  assert.equal(d2.streak, 2);
+  assert.equal(d2.awarded, points + streakBonus);
+  const d3 = await checkin(commerce, shop, { date: '2026-01-07' });
+  assert.equal(d3.streak, 3);
+  assert.equal(d3.awarded, points + 2 * streakBonus);
+});
+
+test('same-day check-in pays nothing; a missed day resets the streak', async () => {
+  const shop = readShop('food');
+  const commerce = new Commerce(':memory:');
+  await runLoop(commerce, shop, { revealSeed: 7 });
+  await checkin(commerce, shop, { date: '2026-02-02' });
+  const before = (await checkin(commerce, shop, { date: '2026-02-02' }));
+  assert.equal(before.alreadyCheckedIn, true);
+  assert.equal(before.awarded, 0);
+  assert.equal(before.streak, 1);
+  const afterGap = await checkin(commerce, shop, { date: '2026-02-04' });
+  assert.equal(afterGap.alreadyCheckedIn, false);
+  assert.equal(afterGap.streak, 1);
+});
+
+test('order earns are not check-ins; unknown databases fail fast', async () => {
+  const shop = readShop('food');
+  const commerce = new Commerce(':memory:');
+  const receipt = await runLoop(commerce, shop, { revealSeed: 7 });
+  assert.ok(receipt.loyaltyEarned > 0);
+  const first = await checkin(commerce, shop, { date: '2026-03-10' });
+  assert.equal(first.streak, 1);
+  await assert.rejects(
+    checkin(new Commerce(':memory:'), shop, { date: '2026-03-10' }),
+    /Launch the shop first/,
+  );
+  await assert.rejects(
+    checkin(commerce, shop, { date: 'not-a-date' }),
+    /YYYY-MM-DD/,
+  );
+});
+
+test('CLI checkin walks a streak across simulated days', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'dopamine-cli-checkin-'));
+  try {
+    const db = join(dir, 'food.db');
+    const launch = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), 'food', '--db', db], { encoding: 'utf8', timeout: 60_000 });
+    assert.equal(launch.status, 0, launch.stderr);
+    const run = (date) => spawnSync(
+      process.execPath,
+      [join(root, 'bin', 'launch.mjs'), 'checkin', 'food', '--db', db, '--date', date],
+      { encoding: 'utf8', timeout: 60_000 },
+    );
+    const d1 = run('2026-04-01');
+    assert.equal(d1.status, 0, d1.stderr);
+    assert.match(d1.stdout, /Day 1 streak/);
+    const again = run('2026-04-01');
+    assert.equal(again.status, 0, again.stderr);
+    assert.match(again.stdout, /Already checked in/);
+    const d2 = run('2026-04-02');
+    assert.equal(d2.status, 0, d2.stderr);
+    assert.match(d2.stdout, /Day 2 streak/);
+    const missing = spawnSync(
+      process.execPath,
+      [join(root, 'bin', 'launch.mjs'), 'checkin', 'food', '--db', join(dir, 'missing.db')],
+      { encoding: 'utf8', timeout: 60_000 },
+    );
+    assert.equal(missing.status, 1);
+    assert.match(missing.stderr, /Launch the shop first/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test('--list names every launchable shop', () => {

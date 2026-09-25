@@ -70,6 +70,24 @@ order through the engine after checkout and reports the stored status on the
 receipt — tracking theater backed by a real record. Without it, orders stay
 `confirmed`. See `shops/fit`.
 
+## Daily check-ins and streaks
+
+One launch is a hit; a streak is a habit. Any launched database accepts
+repeat visits:
+
+```bash
+node bin/launch.mjs checkin food --db food.db
+```
+
+Each calendar day pays `loyalty.checkin.points` plus `streakBonus` per
+consecutive day before it. The claimed day is stamped in the transaction
+description (`Daily check-in YYYY-MM-DD`), and streaks derive from those
+stamps — never stored separately, so they cannot drift. Checking in twice
+pays once; a missed day resets to 1. Order earns never count as check-ins.
+Pass `--date YYYY-MM-DD` to simulate other days in tests and demos;
+production runs default to the real today. Claimed dates are trusted here —
+a production shop would enforce server-side dates.
+
 ## Step 5 — Launch and verify
 
 ```bash

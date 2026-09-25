@@ -12,7 +12,8 @@
   "deal": { "code": "DOPAMINE-DAY", "name": "Dopamine Day", "percentOff": 0.5, "coupon": "HALFOFF" },
   "//deal-alt": "Fixed-amount instead: { code, name, promotionType: fixed_amount_off, fixedOff: 5, coupon }",
   "mysteryBox": { "pool": ["Glorious Widget", "Shiny Gadget", "A profound sense of satisfaction"] },
-  "loyalty": { "program": "Regulars Club", "pointsPerDollar": 10 },
+  "loyalty": { "program": "Regulars Club", "pointsPerDollar": 10, "checkin": { "points": 10, "streakBonus": 2 } },
+  "//checkin": "Daily check-ins pay points + streakBonus per consecutive day. See GUIDE.md.",
   "//loyalty-rewards": "Optional: rewards: [{ name, type: discount|free_product|free_shipping, cost (points), value? }]. First affordable reward auto-redeems at launch.",
   "shipping": {
     "firstName": "Ada", "lastName": "Lovelace", "line1": "123 Imagination Lane",

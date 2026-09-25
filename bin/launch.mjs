@@ -2,7 +2,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadShop, openDatabase, printReceipt, runLoop } from '../lib/shop.mjs';
+import { checkin, loadShop, openDatabase, printReceipt, runLoop } from '../lib/shop.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const shopsDir = join(root, 'shops');
@@ -19,9 +19,16 @@ if (args.includes('--list') || args.includes('-l')) {
   process.exit(0);
 }
 
-const name = args.find((a) => !a.startsWith('--'));
+let command = 'launch';
+let rest = args;
+if (args[0] === 'checkin') {
+  command = 'checkin';
+  rest = args.slice(1);
+}
+const name = rest.find((a) => !a.startsWith('--'));
 if (!name) {
   console.error('Usage: node bin/launch.mjs <shop> [--db <path>] [--email <address>] [--list]');
+  console.error('   or: node bin/launch.mjs checkin <shop> --db <path> [--date YYYY-MM-DD]');
   console.error(`Available shops: ${listShops().join(', ')}`);
   process.exit(1);
 }
@@ -44,6 +51,19 @@ if (email) {
   if (shop.shipping) shop.shipping = { ...shop.shipping, email };
 }
 const dbPath = resolve(flagValue('--db') ?? join(process.cwd(), `${name}.db`));
+if (command === 'checkin') {
+  if (!existsSync(dbPath)) {
+    console.error(`No database at ${dbPath}. Launch the shop first: node bin/launch.mjs ${name} --db ${dbPath}`);
+    process.exit(1);
+  }
+  const result = await checkin(openDatabase(dbPath), shop, { date: flagValue('--date') ?? undefined });
+  if (result.alreadyCheckedIn) {
+    console.log(`🔥 Already checked in today — streak day ${result.streak} (balance ${result.balance})`);
+  } else {
+    console.log(`🔥 Day ${result.streak} streak! +${result.awarded} pts (balance ${result.balance})`);
+  }
+  process.exit(0);
+}
 if (existsSync(dbPath)) {
   console.error(`${dbPath} already exists. Remove it or pass --db <fresh-path> for a clean launch.`);
   process.exit(1);

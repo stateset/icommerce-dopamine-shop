@@ -11,6 +11,6 @@
   "basket": [{ "sku": "BIBIMBAP", "qty": 1 }, { "sku": "RAMEN", "qty": 1 }],
   "deal": { "code": "DOPAMINE-DAY", "name": "50% off every order, forever", "percentOff": 0.5, "coupon": "HALFOFF" },
   "mysteryBox": { "pool": ["Bibimbap", "Midnight Ramen", "Victory Taco", "Dessert (imaginary)"] },
-  "loyalty": { "program": "Craving Club", "pointsPerDollar": 10 },
+  "loyalty": { "program": "Craving Club", "pointsPerDollar": 10, "checkin": { "points": 10, "streakBonus": 2 } },
   "theater": { "lines": ["🍳 Order {id} confirmed — warming up the kitchen", "🛵 Rider picked up order {id} (there is no rider)", "✨ Order {id} delivered in 0 minutes. 0 spent."] }
 }

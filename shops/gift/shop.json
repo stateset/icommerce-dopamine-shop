@@ -14,6 +14,7 @@
   "loyalty": {
     "program": "Thoughtfulness Club",
     "pointsPerDollar": 10,
+    "checkin": { "points": 10, "streakBonus": 2 },
     "rewards": [{ "name": "Gift Wrap", "type": "discount", "cost": 150, "value": "5.00" }]
   },
   "theater": { "lines": ["🎁 Gift {id} wrapped with tissue paper", "🎁 Gift {id} shipped (it was not)", "✨ Gift {id} arrived in spirit. They loved it (allegedly)."] }
