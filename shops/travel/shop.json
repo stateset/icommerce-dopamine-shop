@@ -1,0 +1,16 @@
+{
+  "name": "TripNeverLeaves",
+  "emoji": "✈️",
+  "currency": "USD",
+  "customer": { "email": "restless@example.com", "firstName": "Restless", "lastName": "Traveler" },
+  "catalog": [
+    { "sku": "KYOTO-WKND", "name": "Weekend in Kyoto", "price": "499.00", "quantity": 10 },
+    { "sku": "BEACH-DAY", "name": "Beach Day (cloudy)", "price": "199.00", "quantity": 10 },
+    { "sku": "STAYCATION", "name": "Couch Staycation", "price": "49.00", "quantity": 10 }
+  ],
+  "basket": [{ "sku": "KYOTO-WKND", "qty": 1 }],
+  "deal": { "code": "WINDOW-SEAT", "name": "20% off imaginary legroom", "percentOff": 0.2, "coupon": "WINDOWSEAT" },
+  "mysteryBox": { "pool": ["Weekend in Kyoto", "Beach Day (cloudy)", "Couch Staycation", "Airport nap (premium)"] },
+  "loyalty": { "program": "Wander Miles", "pointsPerDollar": 5 },
+  "theater": { "lines": ["🎫 Booking {id} confirmed — pack nothing", "✈️ Flight {id} is boarding (it never departs)", "✨ Trip {id} complete. You never left the couch."] }
+}

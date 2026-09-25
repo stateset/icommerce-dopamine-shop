@@ -1,0 +1,22 @@
+{
+  "name": "icommerce-dopamine-shop",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "One-button framework for launching dopamine shops on the StateSet embedded commerce engine.",
+  "bin": {
+    "launch-dopamine-shop": "./bin/launch.mjs"
+  },
+  "scripts": {
+    "launch": "node bin/launch.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20.20.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "@stateset/embedded": "1.35.1"
+  },
+  "license": "MIT"
+}

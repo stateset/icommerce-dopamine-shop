@@ -1,0 +1,16 @@
+{
+  "name": "ShopEverything",
+  "emoji": "💎",
+  "currency": "USD",
+  "customer": { "email": "browser@example.com", "firstName": "Window", "lastName": "Shopper" },
+  "catalog": [
+    { "sku": "MUG-001", "name": "Ceramic mug", "price": "12.50", "quantity": 10 },
+    { "sku": "CANDLE-001", "name": "Smells Like Money Candle", "price": "18.00", "quantity": 10 },
+    { "sku": "MYSTERY-BOX", "name": "Mystery Box (odds disclosed: vibes)", "price": "15.00", "quantity": 10 }
+  ],
+  "basket": [{ "sku": "MUG-001", "qty": 2 }, { "sku": "MYSTERY-BOX", "qty": 1 }],
+  "deal": { "code": "DOPAMINE-DAY", "name": "Everything you want, none of the consequences", "percentOff": 0.5, "coupon": "DOPAMINE50" },
+  "mysteryBox": { "pool": ["Ceramic mug", "Smells Like Money Candle", "A second Mystery Box (do not open)"] },
+  "loyalty": { "program": "Vibes Club", "pointsPerDollar": 10 },
+  "theater": { "lines": ["📦 Order {id} packed with tissue paper and lies", "🚚 Order {id} shipped — watch it vanish in 3… 2… 1…", "✨ Order {id} delivered to your imagination. Get the hit, keep the money."] }
+}

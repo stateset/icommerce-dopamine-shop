@@ -1,0 +1,16 @@
+{
+  "name": "CraveNeverPays",
+  "emoji": "🍜",
+  "currency": "USD",
+  "customer": { "email": "hungry@example.com", "firstName": "Hungry", "lastName": "Human" },
+  "catalog": [
+    { "sku": "BIBIMBAP", "name": "Bibimbap", "price": "12.00", "quantity": 10 },
+    { "sku": "RAMEN", "name": "Midnight Ramen", "price": "10.00", "quantity": 10 },
+    { "sku": "TACO", "name": "Victory Taco", "price": "8.50", "quantity": 10 }
+  ],
+  "basket": [{ "sku": "BIBIMBAP", "qty": 1 }, { "sku": "RAMEN", "qty": 1 }],
+  "deal": { "code": "DOPAMINE-DAY", "name": "50% off every order, forever", "percentOff": 0.5, "coupon": "HALFOFF" },
+  "mysteryBox": { "pool": ["Bibimbap", "Midnight Ramen", "Victory Taco", "Dessert (imaginary)"] },
+  "loyalty": { "program": "Craving Club", "pointsPerDollar": 10 },
+  "theater": { "lines": ["🍳 Order {id} confirmed — warming up the kitchen", "🛵 Rider picked up order {id} (there is no rider)", "✨ Order {id} delivered in 0 minutes. 0 spent."] }
+}

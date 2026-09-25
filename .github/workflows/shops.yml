@@ -1,0 +1,20 @@
+name: Dopamine shops
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  shops:
+    name: Launch every shop preset
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install the pinned native engine
+        run: npm ci --no-audit --no-fund
+      - name: Run the shop test suite
+        run: npm test

@@ -1,0 +1,21 @@
+{
+  "//": "Copy this directory to shops/<yours>/ and edit. Every key except emoji/shipping/theater/mysteryBox is required.",
+  "name": "My Dopamine Shop",
+  "emoji": "✨",
+  "currency": "USD",
+  "customer": { "email": "ada@example.com", "firstName": "Ada", "lastName": "Lovelace" },
+  "catalog": [
+    { "sku": "WIDGET-001", "name": "Glorious Widget", "price": "12.00", "quantity": 10 },
+    { "sku": "GADGET-001", "name": "Shiny Gadget", "price": "8.50", "quantity": 10 }
+  ],
+  "basket": [{ "sku": "WIDGET-001", "qty": 1 }, { "sku": "GADGET-001", "qty": 1 }],
+  "deal": { "code": "DOPAMINE-DAY", "name": "Dopamine Day", "percentOff": 0.5, "coupon": "HALFOFF" },
+  "mysteryBox": { "pool": ["Glorious Widget", "Shiny Gadget", "A profound sense of satisfaction"] },
+  "loyalty": { "program": "Regulars Club", "pointsPerDollar": 10 },
+  "shipping": {
+    "firstName": "Ada", "lastName": "Lovelace", "line1": "123 Imagination Lane",
+    "city": "Portland", "state": "OR", "postalCode": "97205", "country": "US",
+    "email": "ada@example.com"
+  },
+  "theater": { "lines": ["🛵 Order {id} confirmed", "🛵 Order {id} is on its way (it is not)", "✨ Order {id} delivered — to your imagination"] }
+}
