@@ -1,0 +1,16 @@
+{
+  "name": "FitNeverSweats",
+  "emoji": "🏋️",
+  "currency": "USD",
+  "customer": { "email": "sore-tomorrow@example.com", "firstName": "Sore", "lastName": "Tomorrow" },
+  "catalog": [
+    { "sku": "PROTEIN-001", "name": "Protein Powder (imaginary gains)", "price": "29.00", "quantity": 10 },
+    { "sku": "BANDS-001", "name": "Resistance Bands (door not included)", "price": "19.00", "quantity": 10 },
+    { "sku": "SWEATBAND-001", "name": "Sweatband of Glory", "price": "9.00", "quantity": 10 }
+  ],
+  "basket": [{ "sku": "PROTEIN-001", "qty": 1 }],
+  "deal": { "code": "SWEAT-WEEK", "name": "30% off leg day", "percentOff": 0.3, "coupon": "SWEAT30" },
+  "loyalty": { "program": "Streak Club", "pointsPerDollar": 10 },
+  "fulfill": { "tracking": "GAINS-OUTBOUND-001" },
+  "theater": { "lines": ["🏋️ Order {id} warmed up", "🏋️ Order {id} is doing cardio (it is resting)", "✨ Order {id} crushed it. Zero reps, all glory."] }
+}

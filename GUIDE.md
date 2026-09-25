@@ -65,6 +65,11 @@ Optional `loyalty.rewards` turns points back into perks: list
 redeems the first one the balance affords as a negative-point `redeem`
 transaction. See `shops/gift` for a working example.
 
+Optional `"fulfill": { "tracking": "YOUR-OUTBOUND-001" }` really ships the
+order through the engine after checkout and reports the stored status on the
+receipt — tracking theater backed by a real record. Without it, orders stay
+`confirmed`. See `shops/fit`.
+
 ## Step 5 — Launch and verify
 
 ```bash

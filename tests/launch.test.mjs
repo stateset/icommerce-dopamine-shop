@@ -11,7 +11,7 @@ import { reveal, trackingTheater } from '../lib/theater.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const shopsDir = join(root, 'shops');
-const presets = ['food', 'travel', 'mall', 'gift'];
+const presets = ['food', 'travel', 'mall', 'gift', 'fit'];
 
 function readShop(name) {
   return loadShop(JSON.parse(readFileSync(join(shopsDir, name, 'shop.json'), 'utf8')));
@@ -160,10 +160,27 @@ test('CLI refuses to relaunch into an existing database', () => {
   }
 });
 
+test('fulfill ships the order for real (locally)', async () => {
+  const fit = await runLoop(new Commerce(':memory:'), readShop('fit'), { revealSeed: 3 });
+  assert.equal(fit.orderStatus, 'shipped');
+  assert.equal(fit.shipmentStatus, 'shipped');
+  assert.equal(fit.trackingNumber, 'GAINS-OUTBOUND-001');
+
+  const food = await runLoop(new Commerce(':memory:'), readShop('food'), { revealSeed: 3 });
+  assert.equal(food.orderStatus, 'confirmed');
+  assert.equal(food.shipmentStatus, null);
+  assert.equal(food.trackingNumber, null);
+});
+
+test('fulfill without a tracking string fails fast', async () => {
+  const bad = { ...readShop('fit'), fulfill: {} };
+  await assert.rejects(runLoop(new Commerce(':memory:'), bad), /"tracking"/);
+});
+
 test('--list names every launchable shop', () => {
   const result = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), '--list'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
-  for (const name of ['food', 'travel', 'mall', 'gift']) {
+  for (const name of ['food', 'travel', 'mall', 'gift', 'fit']) {
     assert.match(result.stdout, new RegExp(`^${name}$`, 'm'));
   }
 });
