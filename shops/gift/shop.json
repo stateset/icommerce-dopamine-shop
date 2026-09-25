@@ -1,0 +1,20 @@
+{
+  "name": "GiftNeverArrives",
+  "emoji": "🎁",
+  "currency": "USD",
+  "customer": { "email": "thoughtful@example.com", "firstName": "Thoughtful", "lastName": "Gifter" },
+  "catalog": [
+    { "sku": "HUG-001", "name": "Imaginary Hug", "price": "12.00", "quantity": 10 },
+    { "sku": "POEM-001", "name": "Fridge Poem (magnetic)", "price": "9.00", "quantity": 10 },
+    { "sku": "HIGHFIVE-001", "name": "Delayed High-Five", "price": "4.00", "quantity": 10 }
+  ],
+  "basket": [{ "sku": "HUG-001", "qty": 2 }],
+  "deal": { "code": "THOUGHTFUL", "name": "$5 off thoughtful gestures", "promotionType": "fixed_amount_off", "fixedOff": 5, "coupon": "GIFT5" },
+  "mysteryBox": { "pool": ["Imaginary Hug", "Fridge Poem (magnetic)", "A card that says nothing is on its way"] },
+  "loyalty": {
+    "program": "Thoughtfulness Club",
+    "pointsPerDollar": 10,
+    "rewards": [{ "name": "Gift Wrap", "type": "discount", "cost": 150, "value": "5.00" }]
+  },
+  "theater": { "lines": ["🎁 Gift {id} wrapped with tissue paper", "🎁 Gift {id} shipped (it was not)", "✨ Gift {id} arrived in spirit. They loved it (allegedly)."] }
+}

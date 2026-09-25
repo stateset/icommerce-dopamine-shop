@@ -11,7 +11,7 @@ import { reveal, trackingTheater } from '../lib/theater.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const shopsDir = join(root, 'shops');
-const presets = ['food', 'travel', 'mall'];
+const presets = ['food', 'travel', 'mall', 'gift'];
 
 function readShop(name) {
   return loadShop(JSON.parse(readFileSync(join(shopsDir, name, 'shop.json'), 'utf8')));
@@ -28,6 +28,27 @@ test('template config is valid and every preset loads', () => {
 test('loadShop rejects configs missing required keys', () => {
   assert.throws(() => loadShop({}), /missing required key/);
   assert.throws(() => loadShop({ ...readShop('food'), deal: {} }), /deal is missing/);
+  assert.throws(() => loadShop({ ...readShop('food'), deal: { code: 'X', name: 'X', coupon: 'X', promotionType: 'bogus' } }), /promotionType/);
+  assert.throws(() => loadShop({ ...readShop('food'), deal: { code: 'X', name: 'X', coupon: 'X', promotionType: 'fixed_amount_off' } }), /fixedOff/);
+});
+
+test('gift shop: fixed-amount deal and reward redemption', async () => {
+  const shop = readShop('gift');
+  const commerce = new Commerce(':memory:');
+  const receipt = await runLoop(commerce, shop, { revealSeed: 2 });
+  assert.equal(receipt.dealType, 'fixed_amount_off');
+  assert.equal(receipt.discount, '5');
+  assert.equal(receipt.total, '19.00');
+  assert.deepEqual(receipt.redeemed, { name: 'Gift Wrap', cost: 150 });
+  assert.equal(receipt.loyaltyBalance, receipt.loyaltyEarned - 150);
+  const txs = await commerce.loyalty.getTransactions(
+    (await commerce.loyalty.getAccountByCustomer(
+      (await commerce.customers.getByEmail(shop.customer.email)).id,
+      (await commerce.loyalty.listPrograms()).find((p) => p.name === shop.loyalty.program).id,
+    )).id,
+    10,
+  );
+  assert.ok(txs.some((t) => t.transactionType === 'redeem' && t.points === -150));
 });
 
 for (const name of [...presets, '_template']) {
@@ -42,7 +63,7 @@ for (const name of [...presets, '_template']) {
     const [sub, disc, tot] = [receipt.subtotal, receipt.discount, receipt.total].map(Number);
     assert.ok(sub > 0 && disc > 0 && tot > 0);
     assert.equal((sub - disc).toFixed(2), tot.toFixed(2));
-    assert.equal(receipt.loyaltyBalance, receipt.loyaltyEarned);
+    assert.equal(receipt.loyaltyBalance, receipt.loyaltyEarned - (receipt.redeemed?.cost ?? 0));
     assert.ok(receipt.loyaltyEarned > 0);
     assert.ok(receipt.orderId);
     assert.equal(await commerce.orders.count(), 1);
@@ -142,7 +163,7 @@ test('CLI refuses to relaunch into an existing database', () => {
 test('--list names every launchable shop', () => {
   const result = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), '--list'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
-  for (const name of ['food', 'travel', 'mall']) {
+  for (const name of ['food', 'travel', 'mall', 'gift']) {
     assert.match(result.stdout, new RegExp(`^${name}$`, 'm'));
   }
 });

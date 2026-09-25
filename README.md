@@ -22,6 +22,7 @@ bin/launch.mjs --list` shows every shop.
 | `food` — CraveNeverPays | Fake food delivery | 50% off, `HALFOFF` | Craving Club |
 | `travel` — TripNeverLeaves | Book the trip, skip the airport | 20% off, `WINDOWSEAT` | Wander Miles |
 | `mall` — ShopEverything | Shop everything, buy nothing | 50% off, `DOPAMINE50` | Vibes Club |
+| `gift` — GiftNeverArrives | Gifts that never ship | $5 off, `GIFT5` | Thoughtfulness Club + Gift Wrap redeem |
 
 ## Build your own
 

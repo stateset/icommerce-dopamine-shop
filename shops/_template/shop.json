@@ -10,8 +10,10 @@
   ],
   "basket": [{ "sku": "WIDGET-001", "qty": 1 }, { "sku": "GADGET-001", "qty": 1 }],
   "deal": { "code": "DOPAMINE-DAY", "name": "Dopamine Day", "percentOff": 0.5, "coupon": "HALFOFF" },
+  "//deal-alt": "Fixed-amount instead: { code, name, promotionType: fixed_amount_off, fixedOff: 5, coupon }",
   "mysteryBox": { "pool": ["Glorious Widget", "Shiny Gadget", "A profound sense of satisfaction"] },
   "loyalty": { "program": "Regulars Club", "pointsPerDollar": 10 },
+  "//loyalty-rewards": "Optional: rewards: [{ name, type: discount|free_product|free_shipping, cost (points), value? }]. First affordable reward auto-redeems at launch.",
   "shipping": {
     "firstName": "Ada", "lastName": "Lovelace", "line1": "123 Imagination Lane",
     "city": "Portland", "state": "OR", "postalCode": "97205", "country": "US",

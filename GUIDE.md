@@ -42,9 +42,10 @@ order the launcher runs: SKUs must exist in `catalog`.
 "deal": { "code": "DOPAMINE-DAY", "name": "50% off, forever", "percentOff": 0.5, "coupon": "HALFOFF" }
 ```
 
-The launcher creates the percentage-off promotion, activates it, mints the
-coupon, validates it, and applies it to the cart. `percentOff` is a fraction
-(`0.5` = 50% off).
+The launcher creates the promotion, activates it, mints the coupon,
+validates it, and applies it to the cart. Two deal types: `percentage_off`
+with `percentOff` as a fraction (`0.5` = 50% off), or `fixed_amount_off` with
+`fixedOff` as a number (`5` = $5 off) via `"promotionType": "fixed_amount_off"`.
 
 ## Step 4 — Add loyalty and theater
 
@@ -57,6 +58,12 @@ coupon, validates it, and applies it to the cart. `percentOff` is a fraction
 `{id}` in theater lines becomes the order's short ID. Theater is pure
 app-level text: countdowns, riders, gates, and reveals live here, never in the
 engine. Money, stock, and points are engine-grade.
+
+Optional `loyalty.rewards` turns points back into perks: list
+`{ name, type, cost }` (type is `discount`, `free_product`, or
+`free_shipping`, cost in points) and the launcher creates each reward, then
+redeems the first one the balance affords as a negative-point `redeem`
+transaction. See `shops/gift` for a working example.
 
 ## Step 5 — Launch and verify
 
