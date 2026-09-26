@@ -1,0 +1,16 @@
+{
+  "name": "HomeNeverDecorates",
+  "emoji": "🛋️",
+  "currency": "USD",
+  "customer": { "email": "nesting@example.com", "firstName": "Nesting", "lastName": "Instinct" },
+  "catalog": [
+    { "sku": "PILLOW-001", "name": "Cloud Pillow", "price": "20.00", "quantity": 10 },
+    { "sku": "LAMP-001", "name": "Mood Lamp (anxiety, warm)", "price": "35.00", "quantity": 10 },
+    { "sku": "SHELF-001", "name": "Invisible Shelf", "price": "15.00", "quantity": 10 }
+  ],
+  "basket": [{ "sku": "PILLOW-001", "qty": 3 }],
+  "deal": { "code": "BOGO-PILLOW", "name": "Buy 2 pillows, get 1 free", "promotionType": "buy_x_get_y", "buyQty": 2, "getQty": 1, "getOff": 1.0, "coupon": "BOGOPILLOW" },
+  "mysteryBox": { "pool": ["Cloud Pillow", "Mood Lamp (anxiety, warm)", "A room that finally feels like you"] },
+  "loyalty": { "program": "Nest Points", "pointsPerDollar": 10, "checkin": { "points": 10, "streakBonus": 2 } },
+  "theater": { "lines": ["🛋️ Order {id} arranged just so", "🛋️ Order {id} is being feng-shuied (it is not)", "✨ Order {id} placed. The room finally feels like you. The boxes never arrived."] }
+}

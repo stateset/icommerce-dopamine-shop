@@ -43,9 +43,11 @@ order the launcher runs: SKUs must exist in `catalog`.
 ```
 
 The launcher creates the promotion, activates it, mints the coupon,
-validates it, and applies it to the cart. Two deal types: `percentage_off`
-with `percentOff` as a fraction (`0.5` = 50% off), or `fixed_amount_off` with
-`fixedOff` as a number (`5` = $5 off) via `"promotionType": "fixed_amount_off"`.
+validates it, and applies it to the cart. Three deal types: `percentage_off`
+with `percentOff` as a fraction (`0.5` = 50% off); `fixed_amount_off` with
+`fixedOff` as a number (`5` = $5 off); or `buy_x_get_y` with `buyQty`,
+`getQty`, and optional `getOff` (`1.0` = free) — buy 2 get 1 free looks like
+`{ promotionType: "buy_x_get_y", buyQty: 2, getQty: 1, getOff: 1.0, ... }`.
 
 ## Step 4 — Add loyalty and theater
 

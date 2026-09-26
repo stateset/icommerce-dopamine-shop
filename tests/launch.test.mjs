@@ -11,7 +11,7 @@ import { reveal, trackingTheater } from '../lib/theater.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const shopsDir = join(root, 'shops');
-const presets = ['food', 'travel', 'mall', 'gift', 'fit'];
+const presets = ['food', 'travel', 'mall', 'gift', 'fit', 'home'];
 
 function readShop(name) {
   return loadShop(JSON.parse(readFileSync(join(shopsDir, name, 'shop.json'), 'utf8')));
@@ -160,6 +160,20 @@ test('CLI refuses to relaunch into an existing database', () => {
   }
 });
 
+test('home shop: buy-2-get-1 applies the free unit', async () => {
+  const shop = readShop('home');
+  const commerce = new Commerce(':memory:');
+  const receipt = await runLoop(commerce, shop, { revealSeed: 4 });
+  assert.equal(receipt.dealType, 'buy_x_get_y');
+  assert.equal(receipt.subtotal, '60.00');
+  assert.equal(receipt.discount, '20.00');
+  assert.equal(receipt.total, '40.00');
+  assert.throws(
+    () => loadShop({ ...shop, deal: { code: 'X', name: 'X', coupon: 'X', promotionType: 'buy_x_get_y', buyQty: 2 } }),
+    /buyQty.*getQty|getQty/,
+  );
+});
+
 test('fulfill ships the order for real (locally)', async () => {
   const fit = await runLoop(new Commerce(':memory:'), readShop('fit'), { revealSeed: 3 });
   assert.equal(fit.orderStatus, 'shipped');
@@ -261,7 +275,7 @@ test('CLI checkin walks a streak across simulated days', () => {
 test('--list names every launchable shop', () => {
   const result = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), '--list'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
-  for (const name of ['food', 'travel', 'mall', 'gift', 'fit']) {
+  for (const name of ['food', 'travel', 'mall', 'gift', 'fit', 'home']) {
     assert.match(result.stdout, new RegExp(`^${name}$`, 'm'));
   }
 });
