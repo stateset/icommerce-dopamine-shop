@@ -72,6 +72,17 @@ order through the engine after checkout and reports the stored status on the
 receipt — tracking theater backed by a real record. Without it, orders stay
 `confirmed`. See `shops/fit`.
 
+## Time-boxed drops
+
+Countdowns are the oldest dopamine trick here. Give a deal `startsInDays`
+(default `0`) and an optional `lastsDays`; windows are relative so presets
+never expire. The launcher stamps RFC3339 dates and enforces them with an
+explicit validity check before applying the coupon — because coupon
+validation alone does not enforce windows, and applying an out-of-window
+discount would be the wrong kind of surprise. A future or expired drop fails
+fast with its window in the message, and an active window prints
+`⏳ Deal ends <date>` on the receipt. See `shops/mall` (`lastsDays: 30`).
+
 ## Daily check-ins and streaks
 
 One launch is a hit; a streak is a habit. Any launched database accepts

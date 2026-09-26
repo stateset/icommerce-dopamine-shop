@@ -174,6 +174,24 @@ test('home shop: buy-2-get-1 applies the free unit', async () => {
   );
 });
 
+test('drop windows gate the deal even when the coupon validates', async () => {
+  const base = readShop('mall');
+  const future = {
+    ...base,
+    deal: { ...base.deal, code: 'FUTURE-DROP', coupon: 'FUTURE30', startsInDays: 1, lastsDays: 7 },
+  };
+  await assert.rejects(runLoop(new Commerce(':memory:'), future), /not active right now/);
+  const expired = {
+    ...base,
+    deal: { ...base.deal, code: 'OLD-DROP', coupon: 'OLD30', startsInDays: -10, lastsDays: 1 },
+  };
+  await assert.rejects(runLoop(new Commerce(':memory:'), expired), /not active right now/);
+  const live = await runLoop(new Commerce(':memory:'), readShop('mall'), { revealSeed: 5 });
+  assert.match(live.dealEnds ?? '', /^\d{4}-\d{2}-\d{2}$/);
+  const timeless = await runLoop(new Commerce(':memory:'), readShop('food'), { revealSeed: 5 });
+  assert.equal(timeless.dealEnds, null);
+});
+
 test('fulfill ships the order for real (locally)', async () => {
   const fit = await runLoop(new Commerce(':memory:'), readShop('fit'), { revealSeed: 3 });
   assert.equal(fit.orderStatus, 'shipped');
