@@ -21,14 +21,15 @@ if (args.includes('--list') || args.includes('-l')) {
 
 let command = 'launch';
 let rest = args;
-if (args[0] === 'checkin') {
-  command = 'checkin';
+if (args[0] === 'checkin' || args[0] === 'mcp-config') {
+  command = args[0];
   rest = args.slice(1);
 }
 const name = rest.find((a) => !a.startsWith('--'));
 if (!name) {
   console.error('Usage: node bin/launch.mjs <shop> [--db <path>] [--email <address>] [--list]');
   console.error('   or: node bin/launch.mjs checkin <shop> --db <path> [--date YYYY-MM-DD]');
+  console.error('   or: node bin/launch.mjs mcp-config <shop> --db <path>');
   console.error(`Available shops: ${listShops().join(', ')}`);
   process.exit(1);
 }
@@ -51,6 +52,28 @@ if (email) {
   if (shop.shipping) shop.shipping = { ...shop.shipping, email };
 }
 const dbPath = resolve(flagValue('--db') ?? join(process.cwd(), `${name}.db`));
+if (command === 'mcp-config') {
+  console.log(JSON.stringify({
+    mcpServers: {
+      [`dopamine-${name}`]: {
+        command: 'stateset-mcp',
+        args: ['--db', dbPath, '--profile', 'core'],
+      },
+    },
+  }, null, 2));
+  const skus = [...new Set(shop.basket.map((line) => line.sku))].join(', ');
+  console.log([
+    '',
+    'Paste the entry above into your MCP host config, reconnect the server, then ask:',
+    '',
+    `Use the dopamine-${name} read tools to list orders and find the ${shop.name} order.`,
+    `Report its ID, status, total and currency, plus stock on hand, allocated and`,
+    `available for SKU ${skus}. Identify the tool results behind your answer.`,
+    'Do not create, reserve, update, cancel, charge, ship, or send anything.',
+    'If the records or tools are unavailable, report the blocker instead of guessing.',
+  ].join('\n'));
+  process.exit(0);
+}
 if (command === 'checkin') {
   if (!existsSync(dbPath)) {
     console.error(`No database at ${dbPath}. Launch the shop first: node bin/launch.mjs ${name} --db ${dbPath}`);

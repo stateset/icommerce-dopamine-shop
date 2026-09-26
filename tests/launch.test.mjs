@@ -272,6 +272,34 @@ test('CLI checkin walks a streak across simulated days', () => {
   }
 });
 
+test('mcp-config prints a host entry plus a first-task prompt', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'dopamine-cli-mcp-'));
+  try {
+    const db = join(dir, 'mall.db');
+    const result = spawnSync(
+      process.execPath,
+      [join(root, 'bin', 'launch.mjs'), 'mcp-config', 'mall', '--db', db],
+      { encoding: 'utf8', timeout: 60_000 },
+    );
+    assert.equal(result.status, 0, result.stderr);
+    const json = JSON.parse(result.stdout.slice(0, result.stdout.indexOf('\n}') + 2));
+    const entry = json.mcpServers['dopamine-mall'];
+    assert.equal(entry.command, 'stateset-mcp');
+    assert.deepEqual(entry.args.slice(0, 3), ['--db', db, '--profile']);
+    assert.equal(entry.args[3], 'core');
+    assert.match(result.stdout, /MUG-001/);
+    assert.match(result.stdout, /report the blocker/);
+    const unknown = spawnSync(
+      process.execPath,
+      [join(root, 'bin', 'launch.mjs'), 'mcp-config', 'nope', '--db', db],
+      { encoding: 'utf8', timeout: 60_000 },
+    );
+    assert.notEqual(unknown.status, 0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('--list names every launchable shop', () => {
   const result = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), '--list'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);

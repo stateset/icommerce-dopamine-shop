@@ -126,6 +126,24 @@ Same framework, new vibes — each is one `shop.json` away:
 | Database already exists | Remove it or pass `--db` — launches are intentionally fresh |
 | `total` looks wrong | Totals are exact strings; never float-convert them |
 
+## Let an AI agent run your shop
+
+Any launched database is already an MCP backend. Print the host config and a
+first-task prompt:
+
+```bash
+node bin/launch.mjs mcp-config mall --db mall.db
+```
+
+Paste the `dopamine-mall` entry into your MCP host (it runs `stateset-mcp`
+from `@stateset/cli` against that exact database file, `core` profile,
+writes preview-only), reconnect, then paste the prompt. The agent lists
+orders, finds the shop's order, and reports ID, status, total, and stock —
+with a read-only rule and a report-the-blocker instruction, mirroring the
+agent task in Your First Operation. A valid new path opens an empty database,
+so a tool result showing the wrong (or no) orders means the `--db` path is
+wrong — never invent replacement data.
+
 ## Honesty contract
 
 Payments here are **local records**: the engine never charges a card or calls
