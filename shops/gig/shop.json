@@ -1,0 +1,15 @@
+{
+  "name": "GigNeverPlays",
+  "emoji": "🎸",
+  "currency": "USD",
+  "customer": { "email": "front-row@example.com", "firstName": "Front", "lastName": "Row" },
+  "catalog": [
+    { "sku": "GA-TICKET", "name": "General Admission (unobstructed vibes)", "price": "75.00", "quantity": 5 },
+    { "sku": "VIP-LANYARD", "name": "VIP Lanyard (access to nothing)", "price": "25.00", "quantity": 10 }
+  ],
+  "basket": [{ "sku": "GA-TICKET", "qty": 2 }],
+  "deal": { "code": "NO-FEES", "name": "10% off, zero service fees forever", "percentOff": 0.1, "coupon": "NOFEES" },
+  "loyalty": { "program": "Front Row Club", "pointsPerDollar": 10, "checkin": { "points": 10, "streakBonus": 2 } },
+  "fulfill": { "tracking": "ETICKET-001" },
+  "theater": { "lines": ["🎸 Order {id} is #1 in line (the line is empty)", "🎸 Tickets {id} secured — no bots were harmed", "✨ Show {id} was incredible. It never happened."] }
+}

@@ -118,14 +118,18 @@ pick a fresh path for a clean launch.
 
 ## Remix gallery
 
-Same framework, new vibes — each is one `shop.json` away:
+Same framework, new vibes — each is one `shop.json` away. All of these ship
+in `shops/`: food, travel, mall, gift, fit, home, degree, gig.
 
-- **TripNeverLeaves** (included): book the trip, skip the airport.
-- **GigNeverPlays**: tiny-quantity inventory plus `reject_if_insufficient`
-  gives real sellout mechanics; loyalty tiers as presale levels.
-- **FitNeverSweats**: daily deals plus `adjustPoints` streak earns.
-- **DegreeNeverEarns**: courses as products, loyalty tiers as degrees.
-- **HomeNeverDecorates**: bundle promotions, room-box reveals.
+Still to invent: your idea here. Copy `_template` and make it weirder.
+
+## Known limits
+
+`tiered_discount` promotions exist in the SDK, but their rule schema is
+undocumented and no tested rule set discounts — so the framework supports the
+three verified deal types (`percentage_off`, `fixed_amount_off`,
+`buy_x_get_y`) and says so. If a future release documents tier rules, they
+slot into `deal` the same way BOGO did.
 
 ## Troubleshooting
 

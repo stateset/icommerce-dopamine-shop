@@ -11,7 +11,7 @@ import { reveal, trackingTheater } from '../lib/theater.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const shopsDir = join(root, 'shops');
-const presets = ['food', 'travel', 'mall', 'gift', 'fit', 'home'];
+const presets = ['food', 'travel', 'mall', 'gift', 'fit', 'home', 'degree', 'gig'];
 
 function readShop(name) {
   return loadShop(JSON.parse(readFileSync(join(shopsDir, name, 'shop.json'), 'utf8')));
@@ -321,7 +321,7 @@ test('mcp-config prints a host entry plus a first-task prompt', () => {
 test('--list names every launchable shop', () => {
   const result = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), '--list'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
-  for (const name of ['food', 'travel', 'mall', 'gift', 'fit', 'home']) {
+  for (const name of ['food', 'travel', 'mall', 'gift', 'fit', 'home', 'degree', 'gig']) {
     assert.match(result.stdout, new RegExp(`^${name}$`, 'm'));
   }
 });

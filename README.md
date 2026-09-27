@@ -25,6 +25,8 @@ bin/launch.mjs --list` shows every shop.
 | `gift` — GiftNeverArrives | Gifts that never ship | $5 off, `GIFT5` | Thoughtfulness Club + Gift Wrap redeem |
 | `fit` — FitNeverSweats | Gear drops, zero workouts | 30% off, `SWEAT30` | Streak Club, really ships (locally) |
 | `home` — HomeNeverDecorates | Decor that never arrives | Buy 2 get 1, `BOGOPILLOW` | Nest Points |
+| `degree` — DegreeNeverEarns | Tuition without the debt | 15% off, `STUDY15` | Alumni Association |
+| `gig` — GigNeverPlays | Tickets, no fees, no show | 10% off, `NOFEES` | Front Row Club, e-tickets really ship (locally) |
 
 ## Build your own
 

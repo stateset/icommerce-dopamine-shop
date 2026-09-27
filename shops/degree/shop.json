@@ -1,0 +1,16 @@
+{
+  "name": "DegreeNeverEarns",
+  "emoji": "🎓",
+  "currency": "USD",
+  "customer": { "email": "eternal-student@example.com", "firstName": "Eternal", "lastName": "Student" },
+  "catalog": [
+    { "sku": "RHETORIC-101", "name": "Rhetoric 101 (argue anything)", "price": "199.00", "quantity": 10 },
+    { "sku": "NAP-101", "name": "Napping 101 (lab sections)", "price": "99.00", "quantity": 10 },
+    { "sku": "VIBES-301", "name": "Advanced Vibes (seminar)", "price": "149.00", "quantity": 10 }
+  ],
+  "basket": [{ "sku": "NAP-101", "qty": 1 }],
+  "deal": { "code": "DEANS-LIST", "name": "15% off imaginary tuition", "percentOff": 0.15, "coupon": "STUDY15" },
+  "mysteryBox": { "pool": ["Rhetoric 101 (argue anything)", "Napping 101 (lab sections)", "A diploma (frame not included)"] },
+  "loyalty": { "program": "Alumni Association", "pointsPerDollar": 10, "checkin": { "points": 10, "streakBonus": 2 } },
+  "theater": { "lines": ["🎓 Enrollment {id} accepted — no prerequisites", "🎓 Student {id} is attending lectures (asleep)", "✨ Degree {id} conferred. Hireable nowhere, proud everywhere."] }
+}
