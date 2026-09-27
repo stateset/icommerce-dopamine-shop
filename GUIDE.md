@@ -141,6 +141,18 @@ slot into `deal` the same way BOGO did.
 | Database already exists | Remove it or pass `--db` — launches are intentionally fresh |
 | `total` looks wrong | Totals are exact strings; never float-convert them |
 
+## Read the dashboard
+
+Any launched database reports revenue, orders, average order value, items,
+customers, loyalty balance, and the current streak — read-only, no side
+effects:
+
+```bash
+node bin/launch.mjs report mall --db mall.db
+```
+
+Pass `--date YYYY-MM-DD` to read the streak as of another day.
+
 ## Let an AI agent run your shop
 
 Any launched database is already an MCP backend. Print the host config and a

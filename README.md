@@ -56,4 +56,5 @@ npm ci
 npm test
 node bin/launch.mjs mall --db /tmp/mall.db
 node bin/launch.mjs checkin mall --db /tmp/mall.db
+node bin/launch.mjs report mall --db /tmp/mall.db
 ```

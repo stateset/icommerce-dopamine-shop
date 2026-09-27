@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Commerce } from '@stateset/embedded';
-import { checkin, loadShop, runLoop } from '../lib/shop.mjs';
+import { checkin, loadShop, reportShop, runLoop } from '../lib/shop.mjs';
 import { reveal, trackingTheater } from '../lib/theater.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -313,6 +313,57 @@ test('mcp-config prints a host entry plus a first-task prompt', () => {
       { encoding: 'utf8', timeout: 60_000 },
     );
     assert.notEqual(unknown.status, 0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('report dashboard reflects sales, loyalty, and streaks', async () => {
+  const shop = readShop('travel');
+  const commerce = new Commerce(':memory:');
+  await runLoop(commerce, shop, { revealSeed: 9 });
+  await checkin(commerce, shop, { date: '2026-05-01' });
+  await checkin(commerce, shop, { date: '2026-05-02' });
+  const report = await reportShop(commerce, shop, { date: '2026-05-02' });
+  assert.equal(report.shop, shop.name);
+  assert.equal(report.orders, 1);
+  assert.equal(report.revenue, '399.20');
+  assert.equal(report.averageOrder, '399.20');
+  assert.equal(report.itemsSold, 1);
+  assert.equal(report.customers, 1);
+  assert.equal(report.streak, 2);
+  assert.equal(report.lastCheckin, '2026-05-02');
+  assert.ok(report.loyaltyBalance > 0);
+});
+
+test('CLI report prints the dashboard and requires a database', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'dopamine-cli-report-'));
+  try {
+    const db = join(dir, 'travel.db');
+    const launch = spawnSync(process.execPath, [join(root, 'bin', 'launch.mjs'), 'travel', '--db', db], { encoding: 'utf8', timeout: 60_000 });
+    assert.equal(launch.status, 0, launch.stderr);
+    const check = spawnSync(
+      process.execPath,
+      [join(root, 'bin', 'launch.mjs'), 'checkin', 'travel', '--db', db, '--date', '2026-05-02'],
+      { encoding: 'utf8', timeout: 60_000 },
+    );
+    assert.equal(check.status, 0, check.stderr);
+    const report = spawnSync(
+      process.execPath,
+      [join(root, 'bin', 'launch.mjs'), 'report', 'travel', '--db', db, '--date', '2026-05-02'],
+      { encoding: 'utf8', timeout: 60_000 },
+    );
+    assert.equal(report.status, 0, report.stderr);
+    assert.match(report.stdout, /TripNeverLeaves dashboard \(2026-05-02\)/);
+    assert.match(report.stdout, /Revenue: 399\.20 USD/);
+    assert.match(report.stdout, /streak day 1/);
+    const missing = spawnSync(
+      process.execPath,
+      [join(root, 'bin', 'launch.mjs'), 'report', 'travel', '--db', join(dir, 'missing.db')],
+      { encoding: 'utf8', timeout: 60_000 },
+    );
+    assert.equal(missing.status, 1);
+    assert.match(missing.stderr, /Launch the shop first/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
